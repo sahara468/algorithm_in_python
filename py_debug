@@ -17,3 +17,5 @@ define pybt
     call PyGILState_Release($pyGILState)
     she python -c "data=eval(open('/tmp/.tmp.bt.txt').read());print('\n'.join([''.join(s) for s in data]))"
 end
+
+gdb -p 12345
