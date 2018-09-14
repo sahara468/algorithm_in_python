@@ -1,0 +1,19 @@
+define pygbt
+    set pagination off
+    set scheduler-locking off
+    set $pyGILState=PyGILState_Ensure()
+    she rm -f /tmp/.tmp.gbt.txt
+    call PyRun_SimpleString("import gc,traceback;from greenlet import greenlet;greenlets=[ob.gr_frame for ob in gc.get_objects() if isinstance(ob,greenlet) and ob.gr_frame];stacks=map(traceback.format_stack, greenlets);open('/tmp/.tmp.gbt.txt','w').write(str(stacks))")
+    call PyGILState_Release($pyGILState)
+    she python -c "data=eval(open('/tmp/.tmp.gbt.txt').read());print('\n'.join([''.join(s) for s in data]))"
+end
+
+define pybt
+    set pagination off
+    set scheduler-locking off
+    set $pyGILState=PyGILState_Ensure()
+    she rm -f /tmp/.tmp.bt.txt
+    call PyRun_SimpleString("import sys,traceback;stacks=map(traceback.format_stack, sys._current_frames().values());open('/tmp/.tmp.bt.txt','w').write(str(stacks))")
+    call PyGILState_Release($pyGILState)
+    she python -c "data=eval(open('/tmp/.tmp.bt.txt').read());print('\n'.join([''.join(s) for s in data]))"
+end
